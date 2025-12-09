@@ -17,6 +17,5 @@ namespace Wayplot_Backend.DTOs
         public List<string>? Scopes { get; set; }
         public string GetScopesJsonFromArray() => JsonSerializer.Serialize(Scopes);
         public void LoadScopesFromJson(string json) => Scopes = JsonSerializer.Deserialize<List<string>>(json) ?? new List<string>();
-
     }
 }
