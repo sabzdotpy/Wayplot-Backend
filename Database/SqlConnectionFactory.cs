@@ -6,7 +6,7 @@ namespace Wayplot_Backend.Database
     public sealed class SqlConnectionFactory : IDbConnectionFactory
     {
         private readonly string _cs;
-        public SqlConnectionFactory(IConfiguration config)
+        public SqlConnectionFactory(IConfiguration config)  
         {
             _cs = config.GetConnectionString("Default")!;
         }
