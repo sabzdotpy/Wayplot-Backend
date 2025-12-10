@@ -21,6 +21,18 @@ namespace Wayplot_Backend
 
             builder.Services.AddScoped<IJwtUtil, JwtUtility>();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontendDev",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:4200")
+                              .AllowAnyHeader()
+                              .AllowCredentials()
+                              .AllowAnyMethod();
+                    });
+            });
+
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -32,7 +44,7 @@ namespace Wayplot_Backend
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseCors("AllowFrontendDev");
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
