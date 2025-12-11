@@ -1,12 +1,9 @@
 ﻿namespace Wayplot_Backend.Constants
 {
-    public enum UserStatus
+    public enum MapStatus
     {
         ACTIVE,
         INACTIVE,
-        DISABLED,
-        BANNED,
-        SUSPENDED,
         DELETED
     }
 }

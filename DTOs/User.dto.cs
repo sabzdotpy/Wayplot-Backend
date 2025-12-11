@@ -15,4 +15,15 @@ namespace Wayplot_Backend.DTOs
         public string GetScopesJsonFromArray() => JsonSerializer.Serialize(Scopes);
         public void LoadScopesFromJson(string json) => Scopes = JsonSerializer.Deserialize<List<string>>(json) ?? new List<string>();
     }
+
+
+    public class ChangeRoleDTO
+    {
+        public required UserRole Role { get; set; }
+    }
+
+    public class ChangeStatusDTO
+    {
+        public required UserStatus Status { get; set; }
+    }
 }

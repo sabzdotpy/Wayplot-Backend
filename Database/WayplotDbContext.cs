@@ -9,7 +9,7 @@ namespace Wayplot_Backend.Database
         public WayplotDbContext(DbContextOptions<WayplotDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; } = null!;
-
+        public DbSet<Map> Maps { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             _ = modelBuilder.Entity<User>(entity =>

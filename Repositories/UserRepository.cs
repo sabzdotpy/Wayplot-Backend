@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Wayplot_Backend.DTOs;
 using Wayplot_Backend.Models;
+using Wayplot_Backend.Constants;
 
 namespace Wayplot_Backend.Repositories
 {
@@ -13,10 +14,14 @@ namespace Wayplot_Backend.Repositories
         {
             _db = db;
         }
-
         public async Task<List<User>> GetAll()
         {
             return await _db.Users.ToListAsync();
+        }
+
+        public async Task<List<User>> GetAllExcludeDeleted()
+        {
+            return await _db.Users.Where(u => u.Status != UserStatus.DELETED).ToListAsync();
         }
 
         public async Task<User?> Get(Guid id)
@@ -37,6 +42,31 @@ namespace Wayplot_Backend.Repositories
             if (payload.Status.HasValue) user.Status = payload.Status.Value;
             if (payload.Scopes != null) user.Scopes = payload.Scopes;
 
+            user.UpdatedAt = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task Delete(Guid id)
+        {
+            User? user = await _db.Users.FindAsync(id);
+            if (user == null) return;
+            user.Status = UserStatus.DELETED;
+            user.UpdatedAt = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+        }
+        public async Task ChangeUserRole(Guid id, UserRole role)
+        {
+            User? user = await _db.Users.FindAsync(id);
+            if (user == null) return;
+            user.Role = role;
+            user.UpdatedAt = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+        }
+        public async Task ChangeUserStatus(Guid id, UserStatus status)
+        {
+            User? user = await _db.Users.FindAsync(id);
+            if (user == null) return;
+            user.Status = status;
             user.UpdatedAt = DateTime.UtcNow;
             await _db.SaveChangesAsync();
         }
