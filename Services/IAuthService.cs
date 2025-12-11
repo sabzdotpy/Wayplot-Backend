@@ -8,6 +8,6 @@ namespace Wayplot_Backend.Services
     public interface IAuthService
     {
         Task<LoginResponseDto> Login(string email, string password);
-        // Task Register(UserRegisterDTO payload);
+        Task<LoginResponseDto> Signup(SignupRequestDto signupRequest);
     }
 }

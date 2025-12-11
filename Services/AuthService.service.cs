@@ -20,5 +20,10 @@ namespace Wayplot_Backend.Services
             return _repo.Login(email, password);
         }
 
+        public Task<LoginResponseDto> Signup(SignupRequestDto signupRequest)
+        {
+            return _repo.Signup(signupRequest);
+        }
+
     }
 }

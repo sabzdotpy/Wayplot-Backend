@@ -50,12 +50,9 @@ namespace Wayplot_Backend.Controllers
         }
 
         [HttpPost("signup")]
-        public async Task<IActionResult> Signup([FromBody] LoginRequestDto request)
+        public async Task<IActionResult> Signup([FromBody] SignupRequestDto request)
         {
-            string email = request.Email;
-            string password = request.Password;
-
-            LoginResponseDto res = await _authService.Login(email, password);
+            LoginResponseDto res = await _authService.Signup(request);
             if (res.IsSuccess)
             {
                 return Ok(res);
