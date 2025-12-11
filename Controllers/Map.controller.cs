@@ -18,7 +18,7 @@ namespace Wayplot_Backend.Controllers
             _mapService = service;
         }
 
-        [HttpGet("/Map/{id:guid}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetMap(Guid id)
         {
             MapResponseDTO res = await _mapService.GetMap(id);
@@ -36,7 +36,7 @@ namespace Wayplot_Backend.Controllers
         }
 
 
-        [HttpGet("/Map/url/{id:guid}")]
+        [HttpGet("url/{id:guid}")]
         public async Task<IActionResult> GetMapURL(Guid id)
         {
             MapResponseDTO res = await _mapService.GetMapURL(id);
@@ -49,7 +49,7 @@ namespace Wayplot_Backend.Controllers
         }
 
 
-        [HttpPost("/Map")]
+        [HttpPost]
         public async Task<IActionResult> Login([FromBody] CreateMapDTO request)
         {
 
@@ -64,7 +64,7 @@ namespace Wayplot_Backend.Controllers
             }
         }
 
-        [HttpPatch("/Map/{id:guid}")]
+        [HttpPatch("{id:guid}")]
         public async Task<IActionResult> EditMap(Guid id, [FromBody] EditMapDTO request)
         {
             MapResponseDTO res = await _mapService.EditMap(id, request);
@@ -78,7 +78,7 @@ namespace Wayplot_Backend.Controllers
             }
         }
 
-        [HttpDelete("/Map/{id:guid}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteMap(Guid id)
         {
             MapResponseDTO res = await _mapService.DeleteMap(id);
@@ -92,7 +92,7 @@ namespace Wayplot_Backend.Controllers
             }
         }
 
-        [HttpPost("/Map/change-visibility/{id:guid}")]
+        [HttpPost("change-visibility/{id:guid}")]
         public async Task<IActionResult> ChangeVisibility(Guid id, [FromBody] ChangeMapVisibilityDTO visibilityDTO )
         {
             MapResponseDTO res = await _mapService.ChangeVisibility(id, visibilityDTO.visibility);
@@ -106,7 +106,7 @@ namespace Wayplot_Backend.Controllers
             }
         }
 
-        [HttpPost("/Map/change-status/{id:guid}")]
+        [HttpPost("change-status/{id:guid}")]
         public async Task<IActionResult> ChangeStatus(Guid id, [FromBody] ChangeMapStatusDTO statusDTO)
         {
             MapResponseDTO res = await _mapService.ChangeStatus(id, statusDTO.status);

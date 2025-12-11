@@ -36,5 +36,13 @@ namespace Wayplot_Backend.Services
         {
             return _repo.ChangeUserStatus(id, status);
         }
+        public Task AssignUserScopes(Guid id, List<string> scopes)
+        {
+            return _repo.AssignUserScopes(id, scopes);
+        }
+        public Task AddUserScopes(Guid id, List<string> scopes)
+        {
+            return _repo.AddUserScopes(id, scopes);
+        }
     }
 }

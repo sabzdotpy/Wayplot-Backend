@@ -14,5 +14,8 @@ namespace Wayplot_Backend.Services
         Task Delete(Guid id);
         Task ChangeUserRole(Guid id, UserRole role);
         Task ChangeUserStatus(Guid id, UserStatus status);
+        Task AssignUserScopes(Guid id, List<string> scopes);
+        Task AddUserScopes(Guid id, List<string> scopes);
+
     }
 }

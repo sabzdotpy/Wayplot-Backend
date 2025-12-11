@@ -8,7 +8,7 @@ using Wayplot_Backend.Services;
 namespace Wayplot_Backend.Controllers
 {
     [ApiController]
-    [Route("[controller]/")]
+    [Route("[controller]")]
     public sealed class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -18,13 +18,13 @@ namespace Wayplot_Backend.Controllers
             _userService = service;
         }
 
-        [HttpGet("Users/all")]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _userService.GetAll());
         }
 
-        [HttpGet("Users/exclude-deleted")]
+        [HttpGet("exclude-deleted")]
         public async Task<IActionResult> GetAllExcludeDeleted()
         {
             return Ok(await _userService.GetAllExcludeDeleted());
@@ -63,6 +63,20 @@ namespace Wayplot_Backend.Controllers
         public async Task<IActionResult> ChangeStatus(Guid id, [FromBody] ChangeStatusDTO statusDTO)
         {
             await _userService.ChangeUserStatus(id, statusDTO.Status);
+            return await Get(id);
+        }
+
+        [HttpPost("{id:Guid}/assign-scopes")]
+        public async Task<IActionResult> AssignScopes(Guid id, [FromBody] ChangeScopesDTO statusDTO)
+        {
+            await _userService.AssignUserScopes(id, statusDTO.Scopes);
+            return await Get(id);
+        }
+
+        [HttpPost("{id:Guid}/add-scopes")]
+        public async Task<IActionResult> AddScopes(Guid id, [FromBody] ChangeScopesDTO statusDTO)
+        {
+            await _userService.AddUserScopes(id, statusDTO.Scopes);
             return await Get(id);
         }
     }

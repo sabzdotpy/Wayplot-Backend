@@ -21,9 +21,12 @@ namespace Wayplot_Backend.DTOs
     {
         public required UserRole Role { get; set; }
     }
-
     public class ChangeStatusDTO
     {
         public required UserStatus Status { get; set; }
+    }
+    public class ChangeScopesDTO
+    {
+        public required List<string> Scopes { get; set; }
     }
 }

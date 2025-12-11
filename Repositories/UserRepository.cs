@@ -70,5 +70,24 @@ namespace Wayplot_Backend.Repositories
             user.UpdatedAt = DateTime.UtcNow;
             await _db.SaveChangesAsync();
         }
+
+        public async Task AssignUserScopes(Guid id, List<string> incomingScopes)
+        {
+            User? user = await _db.Users.FindAsync(id);
+            if (user == null) return;
+            user.Scopes = incomingScopes;
+            user.UpdatedAt = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+        }
+        public async Task AddUserScopes(Guid id, List<string> incomingScopes)
+        {
+            User? user = await _db.Users.FindAsync(id);
+            if (user == null) return;
+            List<string> _scopes = user.Scopes;
+            _scopes.AddRange(incomingScopes);
+            user.Scopes = _scopes;
+            user.UpdatedAt = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+        }
     }
 }
