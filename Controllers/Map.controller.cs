@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Wayplot_Backend.Constants;
 using Wayplot_Backend.DTOs;
-using Wayplot_Backend.Models;
 using Wayplot_Backend.Services;
 
 namespace Wayplot_Backend.Controllers

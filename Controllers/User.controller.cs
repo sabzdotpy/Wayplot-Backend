@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using Wayplot_Backend.Constants;
 using Wayplot_Backend.DTOs;
 using Wayplot_Backend.Services;
 

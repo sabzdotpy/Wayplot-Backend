@@ -2,7 +2,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Configuration;
 using Wayplot_Backend.Constants;
 
 namespace Wayplot_Backend.Utilities
