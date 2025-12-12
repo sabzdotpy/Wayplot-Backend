@@ -85,7 +85,9 @@ namespace Wayplot_Backend.Repositories
             {
                 IsSuccess = true,
                 ErrorMessage = null,
-                Token = token
+                Token = token,
+                Name = newUser.Name,
+                Role = newUser.Role.ToString()
             };
         }
     }
