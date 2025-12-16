@@ -14,6 +14,11 @@ namespace Wayplot_Backend.Repositories
             _db = db;
         }
 
+        public async Task<List<Map>> GetAllMaps()
+        {
+            return await _db.Maps.ToListAsync();
+        }
+
         public async Task<Map?> GetMap(Guid id)
         {
             return await _db.Maps.FirstOrDefaultAsync(map => map.Id == id);

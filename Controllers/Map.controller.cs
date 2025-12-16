@@ -15,6 +15,23 @@ namespace Wayplot_Backend.Controllers
             _mapService = service;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllMaps()
+        {
+            MapResponseDTO res = await _mapService.GetAll();
+            if (res.IsError)
+            {
+                return NotFound(res.ErrorMessage);
+            }
+
+            return Ok(new
+            {
+                data = res.data,
+                message = res.Message
+            });
+        }
+
+
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetMap(Guid id)
         {

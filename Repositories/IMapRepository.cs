@@ -6,6 +6,7 @@ namespace Wayplot_Backend.Repositories
 {
     public interface IMapRepository
     {
+        Task<List<Map>> GetAllMaps();
         Task<Map?> GetMap(Guid id);
         Task<GetMapUrlResponseDTO?> GetMapURL(Guid id);
         Task<Map> CreateMap(Guid uploadederId, CreateMapDTO uploadMapDTO);

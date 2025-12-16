@@ -5,6 +5,7 @@ namespace Wayplot_Backend.Services
 {
     public interface IMapService
     {
+        Task<MapResponseDTO> GetAll();
         Task<MapResponseDTO> GetMap(Guid id);
         Task<MapResponseDTO> GetMapURL(Guid id);
         Task<MapResponseDTO> CreateMap(Guid creatorId, CreateMapDTO uploadMapDTO);

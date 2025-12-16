@@ -14,6 +14,44 @@ namespace Wayplot_Backend.Services
             _repo = repo;
         }
 
+        public async Task<MapResponseDTO> GetAll()
+        {
+            try
+            {
+                List<Map>? maps = await _repo.GetAllMaps();
+
+                if (maps == null || maps.Count == 0)
+                {
+                    return new MapResponseDTO
+                    {
+                        IsError = true,
+                        IsSuccess = false,
+                        ErrorMessage = "",
+                        Message = "Error in fetching all maps."
+                    };
+                }
+
+                return new MapResponseDTO
+                {
+                    IsError = false,
+                    IsSuccess = true,
+                    data = maps,
+                    Message = "Successfully fetched all maps."
+                };
+            }
+            catch (Exception e)
+            {
+                return new MapResponseDTO
+                {
+                    IsError = true,
+                    IsSuccess = false,
+                    data = null,
+                    Message = "Error in fetching all maps.",
+                    ErrorMessage = e.Message
+                };
+            }
+        }
+
         public async Task<MapResponseDTO> ChangeStatus(Guid id, MapStatus status)
         {
             try
