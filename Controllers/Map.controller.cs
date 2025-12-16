@@ -46,11 +46,11 @@ namespace Wayplot_Backend.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> Login([FromBody] CreateMapDTO request)
+        [HttpPost("{uploaderId:guid}")]
+        public async Task<IActionResult> CreateMap(Guid uploaderId, [FromBody] CreateMapDTO request)
         {
 
-            MapResponseDTO res = await _mapService.CreateMap(request);
+            MapResponseDTO res = await _mapService.CreateMap(uploaderId, request);
             if (res.IsSuccess)
             {
                 return Ok(res);

@@ -15,7 +15,8 @@ namespace Wayplot_Backend.DTOs
     {
         public required string Name { get; set; }
         public string? Description { get; set; }
-        public required string Url { get; set; }
+        public required string GpxUrl { get; set; }
+        public required string JsonUrl { get; set; }
         public MapStatus? Status { get; set; } = MapStatus.ACTIVE;
         public MapVisibility? Visibility { get; set; } = MapVisibility.PRIVATE;
     }
@@ -24,7 +25,9 @@ namespace Wayplot_Backend.DTOs
     {
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public string? Url { get; set; }
+        public string? GpxUrl { get; set; }
+        public string? JsonUrl { get; set; }
+
         public MapStatus? Status { get; set; } = MapStatus.ACTIVE;
         public MapVisibility? Visibility { get; set; } = MapVisibility.PRIVATE;
     }
@@ -37,5 +40,11 @@ namespace Wayplot_Backend.DTOs
     public class ChangeMapStatusDTO
     {
         public MapStatus status { get; set; }
+    }
+
+    public class GetMapUrlResponseDTO
+    {
+        public required string GpxUrl { get; set; }
+        public required string JsonUrl { get; set; }
     }
 }

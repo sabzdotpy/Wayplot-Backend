@@ -27,6 +27,10 @@ namespace Wayplot_Backend.Utilities
                 new Claim("scopes", string.Join(",", scopes))
             };
 
+            if (_configuration["JwtSettings:Key"] == null)
+            {
+                throw new ArgumentException("Jwt Secret Key not set in appsettings.json");
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

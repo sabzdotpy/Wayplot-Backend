@@ -20,10 +20,19 @@ namespace Wayplot_Backend.Repositories
             
         }
 
-        public async Task<string?> GetMapURL(Guid id)
+        public async Task<GetMapUrlResponseDTO?> GetMapURL(Guid id)
         {
             Map? map = await GetMap(id);
-            return map!.Url;
+            if (map == null)
+            {
+                return null;
+            }
+
+            return new GetMapUrlResponseDTO
+            {
+                GpxUrl = map.GpxUrl,
+                JsonUrl = map.JsonUrl
+            };
         }
 
         public async Task<Map> CreateMap(Guid uploadederId, CreateMapDTO uploadMapDTO)
@@ -34,7 +43,8 @@ namespace Wayplot_Backend.Repositories
                 Name = uploadMapDTO.Name,
                 Description = uploadMapDTO.Description,
                 UploadedBy = uploadederId,
-                Url = uploadMapDTO.Url,
+                GpxUrl = uploadMapDTO.GpxUrl,
+                JsonUrl = uploadMapDTO.JsonUrl,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 Status = uploadMapDTO.Status ?? MapStatus.ACTIVE,
@@ -60,8 +70,11 @@ namespace Wayplot_Backend.Repositories
             if (!string.IsNullOrEmpty(editMapDTO.Description))
                 map.Description = editMapDTO.Description;
 
-            if (!string.IsNullOrEmpty(editMapDTO.Url))
-                map.Url = editMapDTO.Url;
+            if (!string.IsNullOrEmpty(editMapDTO.GpxUrl))
+                map.GpxUrl = editMapDTO.GpxUrl;
+
+            if (!string.IsNullOrEmpty(editMapDTO.JsonUrl))
+                map.JsonUrl = editMapDTO.JsonUrl;
 
             if (editMapDTO.Status.HasValue)
                 map.Status = editMapDTO.Status.Value;

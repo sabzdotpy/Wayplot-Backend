@@ -29,6 +29,18 @@ namespace Wayplot_Backend.Repositories
                     Token = null
                 };
             }
+            Console.Write("User status is: ");
+            Console.WriteLine(user.Status);
+
+            if (user.Status != UserStatus.ACTIVE)
+            {
+                return new LoginResponseDto
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"This account is not in a valid state. Please contact your administrator.",
+                    Token = null
+                };
+            }
 
             // jwt generation.
             string token = _jwtUtil.GenerateJwtToken(user.Id, user.Email, user.Role, user.Scopes);
