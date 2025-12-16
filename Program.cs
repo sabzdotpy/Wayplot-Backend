@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Wayplot_Backend.Database;
 using Wayplot_Backend.Repositories;
 using Wayplot_Backend.Services;
 using Wayplot_Backend.Utilities;
@@ -45,6 +46,12 @@ namespace Wayplot_Backend
 
             if (app.Environment.IsDevelopment())
             {
+                using (var scope = app.Services.CreateScope())
+                {
+                    var db = scope.ServiceProvider.GetRequiredService<WayplotDbContext>();
+                    DbSeeder.Seed(db);
+                }
+
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
