@@ -6,11 +6,11 @@ This is the backend for WayPlot. It provides API endpoints and data management f
 ## Setup Instructions
 1. Install [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 2. Clone this repo
-3. Run `dotnet restore` in the project root
-4. Run `dotnet build` to build the project
-5. Run `dotnet run` to start the backend server
-6. Configuration files: `appsettings.json`, `appsettings.Development.json`
-
+3. Configure "ConnectionStrings.Default" in `appsettings.json` with your database connection string.
+4. Run 'Update-Database' to apply migrations and create the database
+5. Run `dotnet restore` in the project root
+6. Run `dotnet build` to build the project
+7. Run `dotnet run` to start the backend server
 ## Folder Structure
 ```
 Constants/         # Enums for auth, user roles, status
