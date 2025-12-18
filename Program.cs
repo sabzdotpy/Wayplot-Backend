@@ -14,15 +14,17 @@ namespace Wayplot_Backend
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<Database.WayplotDbContext>(options =>
+            builder.Services.AddDbContext<WayplotDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped<IMapRepository, MapRepository>();
+            builder.Services.AddScoped<IAnalyticRepository, AnalyticRepository>();
 
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IMapService, MapService>();
+            builder.Services.AddScoped<IAnalyticRecordService, AnalyticRecordService>();
 
             builder.Services.AddScoped<IJwtUtil, JwtUtility>();
 

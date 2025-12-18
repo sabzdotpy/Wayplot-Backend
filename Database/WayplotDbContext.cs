@@ -12,6 +12,7 @@ namespace Wayplot_Backend.Database
 
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Map> Maps { get; set; } = null!;
+        public DbSet<AnalyticRecord> AnalyticRecords { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var scopesConverter = new ValueConverter<List<string>, string>(

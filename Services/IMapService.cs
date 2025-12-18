@@ -13,5 +13,6 @@ namespace Wayplot_Backend.Services
         Task<MapResponseDTO> DeleteMap(Guid id);
         Task<MapResponseDTO> ChangeVisibility(Guid id, MapVisibility visibility);
         Task<MapResponseDTO> ChangeStatus(Guid id, MapStatus status);
+        Task<bool> LogDownload(Guid actorId, Guid entityId);
     }
 }

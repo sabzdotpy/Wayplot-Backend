@@ -8,6 +8,7 @@ namespace Wayplot_Backend.Repositories
     {
         Task<List<Map>> GetAllMaps();
         Task<Map?> GetMap(Guid id);
+        Task<bool> LogMapDownload(Guid mapId, Guid actorId);
         Task<GetMapUrlResponseDTO?> GetMapURL(Guid id);
         Task<Map> CreateMap(Guid uploadederId, CreateMapDTO uploadMapDTO);
         Task<Map?> EditMap(Guid id, EditMapDTO editMapDTO);

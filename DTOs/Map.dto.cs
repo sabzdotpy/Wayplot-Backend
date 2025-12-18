@@ -47,4 +47,10 @@ namespace Wayplot_Backend.DTOs
         public required string GpxUrl { get; set; }
         public required string JsonUrl { get; set; }
     }
+
+    public class LogDownloadDTO
+    {
+        public required Guid actorId { get; set; }
+        public required Guid mapId { get; set; }
+    }
 }

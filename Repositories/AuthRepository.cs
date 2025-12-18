@@ -52,6 +52,7 @@ namespace Wayplot_Backend.Repositories
                 Token = token,
                 Name = user.Name,
                 Role = user.Role.ToString(),
+                Id = user.Id
             };
         }
 

@@ -305,5 +305,10 @@ namespace Wayplot_Backend.Services
                 };
             }
         }
+
+        async Task<bool> IMapService.LogDownload(Guid actorId, Guid entityId)
+        {
+            return await _repo.LogMapDownload(actorId, entityId);
+        }
     }
 }

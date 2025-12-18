@@ -133,5 +133,19 @@ namespace Wayplot_Backend.Controllers
                 return BadRequest(res);
             }
         }
+
+        [HttpPost("log-download")]
+        public async Task<IActionResult> LogDownload([FromBody] LogDownloadDTO downloadDTO)
+        {
+            bool res = await _mapService.LogDownload(downloadDTO.actorId, downloadDTO.mapId);
+            if (res)
+            {
+                return Ok(res);
+            }
+            else
+            {
+                return BadRequest(res);
+            }
+        }
     }
 }

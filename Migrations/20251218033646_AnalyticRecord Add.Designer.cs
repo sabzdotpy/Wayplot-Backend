@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wayplot_Backend.Database;
 
@@ -11,9 +12,11 @@ using Wayplot_Backend.Database;
 namespace Wayplot_Backend.Migrations
 {
     [DbContext(typeof(WayplotDbContext))]
-    partial class WayplotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251218033646_AnalyticRecord Add")]
+    partial class AnalyticRecordAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,9 +54,6 @@ namespace Wayplot_Backend.Migrations
 
                     b.Property<Guid>("EntityId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()

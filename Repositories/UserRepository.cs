@@ -8,10 +8,12 @@ namespace Wayplot_Backend.Repositories
     public sealed class UserRepository : IUserRepository
     {
         private readonly Database.WayplotDbContext _db;
+        private readonly Repositories.IAnalyticRepository _analyticRepository;
 
-        public UserRepository(Database.WayplotDbContext db)
+        public UserRepository(Database.WayplotDbContext db, IAnalyticRepository analyticRepository)
         {
             _db = db;
+            _analyticRepository = analyticRepository;
         }
         public async Task<List<User>> GetAll()
         {

@@ -2,25 +2,31 @@
 using Wayplot_Backend.DTOs;
 using Wayplot_Backend.Models;
 using Wayplot_Backend.Constants;
+using Wayplot_Backend.Database;
 
 namespace Wayplot_Backend.Repositories
 {
     public class MapRepository : IMapRepository
     {
-        private readonly Database.WayplotDbContext _db;
+        private readonly WayplotDbContext _db;
+        private readonly IAnalyticRepository _analyticRepository;
 
-        public MapRepository(Database.WayplotDbContext db)
+        public MapRepository(WayplotDbContext db, IAnalyticRepository analyticRepository)
         {
             _db = db;
+            _analyticRepository = analyticRepository;
         }
 
         public async Task<List<Map>> GetAllMaps()
         {
-            return await _db.Maps.ToListAsync();
+            Console.WriteLine("Adding getallmaps view record.");
+            await _analyticRepository.AddRecord("view", Guid.Empty, Guid.Empty);
+            return await _db.Maps.Where((m) => m.Status != MapStatus.DELETED).ToListAsync();
         }
 
         public async Task<Map?> GetMap(Guid id)
         {
+            await _analyticRepository.AddRecord("view", Guid.Empty, id);
             return await _db.Maps.FirstOrDefaultAsync(map => map.Id == id);
             
         }
@@ -33,6 +39,8 @@ namespace Wayplot_Backend.Repositories
                 return null;
             }
 
+            await _analyticRepository.AddRecord("view", Guid.Empty, id);
+
             return new GetMapUrlResponseDTO
             {
                 GpxUrl = map.GpxUrl,
@@ -44,7 +52,7 @@ namespace Wayplot_Backend.Repositories
         {
             Map newMap = new Map
             {
-                Id = new Guid(),
+                Id = Guid.NewGuid(),
                 Name = uploadMapDTO.Name,
                 Description = uploadMapDTO.Description,
                 UploadedBy = uploadederId,
@@ -58,6 +66,7 @@ namespace Wayplot_Backend.Repositories
 
             _db.Maps.Add(newMap);
             await _db.SaveChangesAsync();
+            await _analyticRepository.AddRecord("create", uploadederId, newMap.Id);
             return newMap;
         }
 
@@ -103,7 +112,8 @@ namespace Wayplot_Backend.Repositories
             }
 
             map.Status = MapStatus.DELETED;
-            map.UpdatedAt = new DateTime();
+            map.UpdatedAt = DateTime.UtcNow;
+            _db.Maps.Update(map);
             await _db.SaveChangesAsync();
 
             return true;
@@ -138,5 +148,11 @@ namespace Wayplot_Backend.Repositories
 
             return map;
         }
+
+        public async Task<bool> LogMapDownload(Guid mapId, Guid actorId)
+        {
+            await _analyticRepository.AddRecord("download", actorId, mapId);
+            return true;
+        } 
     }
 }
