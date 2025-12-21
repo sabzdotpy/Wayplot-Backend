@@ -1,0 +1,55 @@
+
+name: Build and Deploy ASP.NET Backend to AWS EC2
+
+on:
+	push:
+		branches:
+			- main
+
+jobs:
+	build-and-deploy:
+		runs-on: ubuntu-latest
+		steps:
+			- name: Checkout code
+				uses: actions/checkout@v4
+
+			- name: Setup .NET
+				uses: actions/setup-dotnet@v4
+				with:
+					dotnet-version: '8.0.x'
+
+			- name: Publish .NET app
+				run: |
+					dotnet publish -c Release -o publish
+
+			- name: Deploy to AWS EC2 via SSH
+				uses: appleboy/ssh-action@v1.0.3
+				with:
+					host: ${{ secrets.EC2_HOST }}
+					username: ${{ secrets.EC2_USER }}
+					key: ${{ secrets.EC2_SSH_KEY }}
+					port: ${{ secrets.EC2_PORT }}
+					script_stop: true
+					script: |
+						set -e
+            echo "Creating deployment directory..."
+						mkdir -p ~/wayplot_asp_backend
+						cd ~/wayplot_asp_backend
+
+            echo "Killing existing application if running..."
+						if pgrep -f "dotnet Wayplot-Backend.dll"; then pkill -f "dotnet Wayplot-Backend.dll"; fi
+
+						echo "Cleaning up old files..."
+						rm -rf *
+
+            echo "Transferring new files..."
+						if [ ! -d .git ]; then git init; git remote add origin https://github.com/${{ github.repository }}.git; fi
+						git fetch origin main
+						git reset --hard origin/main
+
+            echo "Publishing the application..."
+						dotnet publish -c Release -o publish
+						
+            echo "Starting the application..."
+						nohup dotnet publish/Wayplot-Backend.dll --urls http://localhost:5057 > app.log 2>&1 &
+						echo "App deployed and running on localhost:5057"

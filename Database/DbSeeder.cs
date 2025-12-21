@@ -7,10 +7,14 @@ namespace Wayplot_Backend.Database
     {
         public static void Seed(WayplotDbContext db)
         {
-            Console.WriteLine("Executing seed script; Ensure this is on Development only.");
 
             if (db.Users.Any() || db.Maps.Any())
+            {
+                Console.WriteLine("Database has users and map data; Skipping seed script.");
                 return;
+            }
+
+            Console.WriteLine("Executing seed script; Ensure this is on Development only.");
 
             var user1 = new User
             {
