@@ -60,6 +60,7 @@ namespace Wayplot_Backend
             app.UseCors("AllowFrontendDev");
             app.UseHttpsRedirection();
             app.UseAuthorization();
+            app.MapGet("/", () => "OK");
             app.MapControllers();
             app.Run();
         }
