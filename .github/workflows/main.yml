@@ -51,5 +51,8 @@ jobs:
           dotnet publish -c Release -o publish
           
           echo "Starting the application..."
-          nohup dotnet publish/Wayplot-Backend.dll --urls http://0.0.0.0:5057 > app.log 2>&1 &
+          setsid nohup dotnet publish/Wayplot-Backend.dll \
+            --urls http://0.0.0.0:5057 \
+            > app.log 2>&1 < /dev/null &
+          disown
           echo "App deployed and running on localhost:5057"
