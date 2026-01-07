@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Wayplot_Backend.DTOs;
-using Wayplot_Backend.Models;
 using Wayplot_Backend.Constants;
 using Wayplot_Backend.Database;
+using Wayplot_Backend.DTOs;
+using Wayplot_Backend.Models;
 
 namespace Wayplot_Backend.Repositories
 {
@@ -17,23 +17,56 @@ namespace Wayplot_Backend.Repositories
             _analyticRepository = analyticRepository;
         }
 
-        public async Task<List<Map>> GetAllMaps()
+        public async Task<List<MapWithAnalyticsDto>> GetAllMaps()
         {
-            Console.WriteLine("Adding getallmaps view record.");
-            await _analyticRepository.AddRecord("view", Guid.Empty, Guid.Empty);
-            return await _db.Maps.Where((m) => m.Status != MapStatus.DELETED).ToListAsync();
+            var result = await _db.Maps
+            .Where(m => m.Status != MapStatus.DELETED)
+            .GroupJoin(
+                _db.AnalyticRecords,
+                m => m.Id,
+                a => a.EntityId,
+                (m, analytics) => new MapWithAnalyticsDto
+                {
+                    Map = m,
+                    ViewCount = analytics.Count(a => a.Type == "view"),
+                    DownloadCount = analytics.Count(a => a.Type == "download")
+                })
+            .ToListAsync();
+
+            Console.WriteLine("Adding view record to all maps.");
+            foreach (var map in result)
+            {
+                await _analyticRepository.AddRecord("view", Guid.Empty, map.Map.Id);
+            }
+
+            return result;
         }
 
-        public async Task<Map?> GetMap(Guid id)
+        public async Task<MapWithAnalyticsDto?> GetMap(Guid id)
         {
-            await _analyticRepository.AddRecord("view", Guid.Empty, id);
-            return await _db.Maps.FirstOrDefaultAsync(map => map.Id == id);
-            
+            var map = await _db.Maps
+            .Where(m => m.Id == id && m.Status != MapStatus.DELETED)
+            .GroupJoin(
+                _db.AnalyticRecords,
+                m => m.Id,
+                a => a.EntityId,
+                (m, analytics) => new MapWithAnalyticsDto
+                {
+                    Map = m,
+                    ViewCount = analytics.Count(a => a.Type == "view"),
+                    DownloadCount = analytics.Count(a => a.Type == "download")
+                })
+            .FirstOrDefaultAsync();
+
+            if (map != null)  await _analyticRepository.AddRecord("view", Guid.Empty, map.Map.Id);
+
+            return map;
+
         }
 
         public async Task<GetMapUrlResponseDTO?> GetMapURL(Guid id)
         {
-            Map? map = await GetMap(id);
+            MapWithAnalyticsDto? map = await GetMap(id);
             if (map == null)
             {
                 return null;
@@ -43,8 +76,8 @@ namespace Wayplot_Backend.Repositories
 
             return new GetMapUrlResponseDTO
             {
-                GpxUrl = map.GpxUrl,
-                JsonUrl = map.JsonUrl
+                GpxUrl = map.Map.GpxUrl,
+                JsonUrl = map.Map.JsonUrl
             };
         }
 
@@ -72,48 +105,48 @@ namespace Wayplot_Backend.Repositories
 
         public async Task<Map?> EditMap(Guid id, EditMapDTO editMapDTO)
         {
-            Map? map = await GetMap(id);
+            MapWithAnalyticsDto? map = await GetMap(id);
             if (map == null)
             {
                 return null;
             }
 
             if (!string.IsNullOrEmpty(editMapDTO.Name))
-                map.Name = editMapDTO.Name;
+                map.Map.Name = editMapDTO.Name;
 
             if (!string.IsNullOrEmpty(editMapDTO.Description))
-                map.Description = editMapDTO.Description;
+                map.Map.Description = editMapDTO.Description;
 
             if (!string.IsNullOrEmpty(editMapDTO.GpxUrl))
-                map.GpxUrl = editMapDTO.GpxUrl;
+                map.Map.GpxUrl = editMapDTO.GpxUrl;
 
             if (!string.IsNullOrEmpty(editMapDTO.JsonUrl))
-                map.JsonUrl = editMapDTO.JsonUrl;
+                map.Map.JsonUrl = editMapDTO.JsonUrl;
 
             if (editMapDTO.Status.HasValue)
-                map.Status = editMapDTO.Status.Value;
+                map.Map.Status = editMapDTO.Status.Value;
 
             if (editMapDTO.Visibility.HasValue)
-                map.Visibility = editMapDTO.Visibility.Value;
+                map.Map.Visibility = editMapDTO.Visibility.Value;
 
-            map.UpdatedAt = DateTime.UtcNow;
+            map.Map.UpdatedAt = DateTime.UtcNow;
 
             await _db.SaveChangesAsync();
 
-            return map;
+            return map.Map;
         }
 
         public async Task<Boolean> DeleteMap(Guid id)
         {
-            Map? map = await GetMap(id);
+            MapWithAnalyticsDto? map = await GetMap(id);
             if (map == null)
             {
                 return false;
             }
 
-            map.Status = MapStatus.DELETED;
-            map.UpdatedAt = DateTime.UtcNow;
-            _db.Maps.Update(map);
+            map.Map.Status = MapStatus.DELETED;
+            map.Map.UpdatedAt = DateTime.UtcNow;
+            _db.Maps.Update(map.Map);
             await _db.SaveChangesAsync();
 
             return true;
@@ -121,35 +154,35 @@ namespace Wayplot_Backend.Repositories
 
         public async Task<Map?> ChangeVisibility(Guid id, MapVisibility visibility)
         {
-            Map? map = await GetMap(id);
+            MapWithAnalyticsDto? map = await GetMap(id);
             if (map == null)
             {
                 return null;
             }
 
-            map.Visibility = visibility;
-            map.UpdatedAt = new DateTime();
+            map.Map.Visibility = visibility;
+            map.Map.UpdatedAt = new DateTime();
             await _db.SaveChangesAsync();
 
-            return map;
+            return map.Map;
         }
 
         public async Task<Map?> ChangeStatus(Guid id, MapStatus status)
         {
-            Map? map = await GetMap(id);
+            MapWithAnalyticsDto? map = await GetMap(id);
             if (map == null)
             {
                 return null;
             }
 
-            map.Status = status;
-            map.UpdatedAt = new DateTime();
+            map.Map.Status = status;
+            map.Map.UpdatedAt = new DateTime();
             await _db.SaveChangesAsync();
 
-            return map;
+            return map.Map;
         }
 
-        public async Task<bool> LogMapDownload(Guid mapId, Guid actorId)
+        public async Task<bool> LogMapDownload(Guid actorId, Guid mapId)
         {
             await _analyticRepository.AddRecord("download", actorId, mapId);
             return true;

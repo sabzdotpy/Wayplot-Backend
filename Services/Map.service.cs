@@ -18,7 +18,7 @@ namespace Wayplot_Backend.Services
         {
             try
             {
-                List<Map>? maps = await _repo.GetAllMaps();
+                List<MapWithAnalyticsDto>? maps = await _repo.GetAllMaps();
 
                 if (maps == null || maps.Count == 0)
                 {
@@ -202,7 +202,7 @@ namespace Wayplot_Backend.Services
         {
             try
             {
-                Map? map = await _repo.GetMap(id);
+                MapWithAnalyticsDto? map = await _repo.GetMap(id);
                 if (map == null)
                 {
                     return new MapResponseDTO

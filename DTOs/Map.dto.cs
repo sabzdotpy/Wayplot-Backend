@@ -1,7 +1,16 @@
 ﻿using Wayplot_Backend.Constants;
+using Wayplot_Backend.Models;
 
 namespace Wayplot_Backend.DTOs
 {
+
+    public class MapWithAnalyticsDto
+    {
+        public required Map Map { get; set; }
+        public int ViewCount { get; set; }
+        public int DownloadCount { get; set; }
+    }
+
     public class MapResponseDTO
     {
         public required bool IsSuccess { get; set; }

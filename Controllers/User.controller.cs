@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Wayplot_Backend.Attributes;
 using Wayplot_Backend.DTOs;
 using Wayplot_Backend.Services;
 
@@ -16,6 +17,7 @@ namespace Wayplot_Backend.Controllers
             _userService = service;
         }
 
+        [RequiredRole("ADMIN")]
         [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
@@ -36,6 +38,7 @@ namespace Wayplot_Backend.Controllers
             return Ok(s);
         }
 
+        [RequiredRole("ADMIN")]
         [HttpPatch("{id:Guid}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UserUpdateDTO patch)
         {
@@ -43,6 +46,7 @@ namespace Wayplot_Backend.Controllers
             return await Get(id);
         }
 
+        [RequiredRole("ADMIN")]
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -50,6 +54,7 @@ namespace Wayplot_Backend.Controllers
             return Ok("User deleted successfully.");
         }
 
+        [RequiredRole("ADMIN")]
         [HttpPatch("{id:Guid}/change-role")]
         public async Task<IActionResult> ChangeRole(Guid id, [FromBody] ChangeRoleDTO roleDTO)
         {
@@ -57,6 +62,7 @@ namespace Wayplot_Backend.Controllers
             return await Get(id);
         }
 
+        [RequiredRole("ADMIN")]
         [HttpPatch("{id:Guid}/change-status")]
         public async Task<IActionResult> ChangeStatus(Guid id, [FromBody] ChangeStatusDTO statusDTO)
         {
@@ -64,6 +70,7 @@ namespace Wayplot_Backend.Controllers
             return await Get(id);
         }
 
+        [RequiredRole("ADMIN")]
         [HttpPost("{id:Guid}/assign-scopes")]
         public async Task<IActionResult> AssignScopes(Guid id, [FromBody] ChangeScopesDTO statusDTO)
         {
@@ -71,6 +78,7 @@ namespace Wayplot_Backend.Controllers
             return await Get(id);
         }
 
+        [RequiredRole("ADMIN")]
         [HttpPost("{id:Guid}/add-scopes")]
         public async Task<IActionResult> AddScopes(Guid id, [FromBody] ChangeScopesDTO statusDTO)
         {

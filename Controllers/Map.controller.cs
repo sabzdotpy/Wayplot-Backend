@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Wayplot_Backend.Attributes;
 using Wayplot_Backend.DTOs;
 using Wayplot_Backend.Services;
 
@@ -63,6 +64,7 @@ namespace Wayplot_Backend.Controllers
         }
 
 
+        [RequiredRole("ADMIN")]
         [HttpPost("{uploaderId:guid}")]
         public async Task<IActionResult> CreateMap(Guid uploaderId, [FromBody] CreateMapDTO request)
         {
@@ -78,6 +80,7 @@ namespace Wayplot_Backend.Controllers
             }
         }
 
+        [RequiredRole("ADMIN")]
         [HttpPatch("{id:guid}")]
         public async Task<IActionResult> EditMap(Guid id, [FromBody] EditMapDTO request)
         {
@@ -92,9 +95,11 @@ namespace Wayplot_Backend.Controllers
             }
         }
 
+        [RequiredRole("ADMIN")]
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteMap(Guid id)
         {
+            Console.WriteLine("Got request to delete a map.");
             MapResponseDTO res = await _mapService.DeleteMap(id);
             if (res.IsSuccess)
             {
@@ -106,6 +111,7 @@ namespace Wayplot_Backend.Controllers
             }
         }
 
+        [RequiredRole("ADMIN")]
         [HttpPost("change-visibility/{id:guid}")]
         public async Task<IActionResult> ChangeVisibility(Guid id, [FromBody] ChangeMapVisibilityDTO visibilityDTO )
         {
@@ -120,6 +126,7 @@ namespace Wayplot_Backend.Controllers
             }
         }
 
+        [RequiredRole("ADMIN")]
         [HttpPost("change-status/{id:guid}")]
         public async Task<IActionResult> ChangeStatus(Guid id, [FromBody] ChangeMapStatusDTO statusDTO)
         {
@@ -138,6 +145,7 @@ namespace Wayplot_Backend.Controllers
         public async Task<IActionResult> LogDownload([FromBody] LogDownloadDTO downloadDTO)
         {
             bool res = await _mapService.LogDownload(downloadDTO.actorId, downloadDTO.mapId);
+
             if (res)
             {
                 return Ok(res);

@@ -1,10 +1,12 @@
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using Wayplot_Backend.Database;
+using Wayplot_Backend.Middleware;
 using Wayplot_Backend.Repositories;
 using Wayplot_Backend.Services;
 using Wayplot_Backend.Utilities;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 
 namespace Wayplot_Backend
 {
@@ -42,7 +44,39 @@ namespace Wayplot_Backend
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Wayplot API",
+                    Version = "v1"
+                });
+
+                var jwtScheme = new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Description = "Paste JWT token only (no 'Bearer ' prefix)",
+
+                    Reference = new OpenApiReference
+                    {
+                        Id = "Bearer",
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+
+                options.AddSecurityDefinition("Bearer", jwtScheme);
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        jwtScheme,
+                        Array.Empty<string>()
+                    }
+                });
+            });
 
             var app = builder.Build();
 
@@ -57,9 +91,22 @@ namespace Wayplot_Backend
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseRouting();
+            app.UseWhen(
+                ctx =>
+                    ctx.Request.Path.StartsWithSegments("/User") ||
+                    ctx.Request.Path.StartsWithSegments("/Map"),
+                appBuilder =>
+                {
+                    appBuilder.UseMiddleware<JwtMiddleware>();
+                    appBuilder.UseMiddleware<RbacMiddleware>();
+                }
+            );
+
             app.UseCors("AllowFrontendDev");
             app.UseHttpsRedirection();
-            app.UseAuthorization();
+            //app.UseAuthorization();
             app.MapGet("/", () => "OK");
             app.MapControllers();
             app.Run();
